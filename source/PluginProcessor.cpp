@@ -57,8 +57,10 @@ void ApiCppWeek3PluginAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    mSmoothedGain.setTargetValue (mGainParameter->get());
+    // This isn't required, you already det the target vaLue in setGainParameterValue()
+    //    mSmoothedGain.setTargetValue (mGainParameter->get());
 
+    // It is generally safer to use the .getSample and .setSample functions with buffers
     float* left_channel = buffer.getWritePointer (0);
     //    float* right_channel = buffer.getWritePointer (1);
 
@@ -80,7 +82,8 @@ void ApiCppWeek3PluginAudioProcessor::processBlock (juce::AudioBuffer<float>& bu
         //        right_channel[sample_idx] = sine_out;
     }
 
-    for (int sample_idx = 0; sample_idx > buffer.getNumSamples(); sample_idx++)
+    // Used the wrong sign so this part was never called
+    for (int sample_idx = 0; sample_idx < buffer.getNumSamples(); sample_idx++)
     {
         float gain_value = mSmoothedGain.getNextValue();
         left_channel[sample_idx] *= gain_value;
